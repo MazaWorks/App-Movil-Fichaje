@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="FichajeQindel.MainPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Fichaje Qindel"
+                   HorizontalOptions="StartAndExpand"
+                   VerticalOptions="CenterAndExpand"
+                   FontAttributes="Bold"
+                   FontSize="20"/>
+            <Button WidthRequest="50"
+                    BackgroundColor="Transparent" 
+                    HorizontalOptions="EndAndExpand"
+                    TextColor="White"
+                    FontSize="25"
+                    Clicked="OnOptionPage">
+                <Button.Text>
+                    <OnPlatform x:TypeArguments="x:String" Android="&#xf185;" iOS="Conf"/>
+                </Button.Text>
+                <Button.FontFamily>
+                    <OnPlatform x:TypeArguments="x:String" Android="Font Awesome 5 Free-Regular-400.otf#Font Awesome 5 Free Regular"/>
+                </Button.FontFamily>
+            </Button>
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <StackLayout BackgroundColor="White">
+        <ActivityIndicator x:Name="actIndicator"
+                IsVisible="True"
+                HeightRequest="48"
+                Margin="10,50,10,20"
+                IsRunning="True"/>
+        <Label x:Name="counter"
+                IsVisible="False"
+                HeightRequest="48"
+                Margin="10,50,10,20"
+                Text="Loading....."
+                FontSize="Title"
+                HorizontalOptions="Center"/>
+        <Grid>
+            <Button x:Name="llegue"
+                        Text="LLegue"
+                        Grid.Column="0"
+                        IsEnabled="false"
+                        Clicked="OnDoThings"/>
+            <Button Text="Refresh" 
+                        HorizontalOptions="Center" 
+                        Grid.Column="1"
+                        Clicked="Refresh"/>
+            <Button x:Name="mevoy"
+                        Grid.Column="2"
+                        Text="Me Voy" 
+                        IsEnabled="false"
+                        Clicked="OnDoThings"/>
+        </Grid>
+    </StackLayout>
+</ContentPage>
