@@ -7,10 +7,10 @@
 Esta app permite fichar en la api kimai especifica de Qindel, pero se puede modificar para peticiones REST de cualquier otra aplicación. Al iniciar la aplicación, se muestra una vista como la siguiente:
 
 
-![Main View](https://github.com/MazaWorks/FichajeQindel.git/Images/MainView.jpeg)
+![Main View](https://github.com/MazaWorks/FichajeQindel/blob/master/Images/MainView.jpeg)
 
 
-![Options View](https://github.com/MazaWorks/FichajeQindel.git/Images/OptionsView.jpeg)
+![Options View](https://github.com/MazaWorks/FichajeQindel/blob/master/Images/OptionsView.jpeg)
 
 
-![Error View](https://github.com/MazaWorks/FichajeQindel.git/Images/ErrorView.jpeg)
+![Error View](https://github.com/MazaWorks/FichajeQindel/blob/master/Images/ErrorView.jpeg)
