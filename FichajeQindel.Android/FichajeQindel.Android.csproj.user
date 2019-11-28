@@ -4,5 +4,6 @@
     <SelectedDevice>HUAWEI MYA-L41</SelectedDevice>
     <DefaultDevice>nexus_4_pie_9_0_api_28</DefaultDevice>
     <AndroidDesignerPreferredTheme>Theme.AppCompat.Light.NoActionBar</AndroidDesignerPreferredTheme>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
 </Project>
