@@ -161,40 +161,130 @@ namespace FichajeQindel
                                             CrossLocalNotifications.Current.Cancel(0);
                                         });
                                     }
+                                    else if (response.StatusCode == HttpStatusCode.Forbidden)
+                                    {
+                                        Device.BeginInvokeOnMainThread(() =>
+                                        {
+                                            CrossLocalNotifications.Current.Cancel(0);
+                                            llegue.IsEnabled = false;
+                                            mevoy.IsEnabled = false;
+                                            fiche = false;
+                                            actIndicator.IsVisible = false;
+                                            counter.IsVisible = true;
+                                            counter.Text = "Error con las credenciales";
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Device.BeginInvokeOnMainThread(() =>
+                                        {
+                                            CrossLocalNotifications.Current.Cancel(0);
+                                            llegue.IsEnabled = false;
+                                            mevoy.IsEnabled = false;
+                                            fiche = false;
+                                            actIndicator.IsVisible = false;
+                                            counter.IsVisible = true;
+                                            counter.Text = "Problema con la peticion";
+                                        });
+                                    }
                                 });
                             }
                             else
                             {
                                 client = new RestClient("https://fichaje.qindel.com");
 
-                                request = new RestRequest("api/timesheets", Method.POST);
+                                request = new RestRequest("api/timesheets/recent", Method.GET);
                                 request.AddHeader("X-AUTH-USER", Application.Current.Properties.ContainsKey("UserName") ? Application.Current.Properties["UserName"].ToString() : "null");
                                 request.AddHeader("X-AUTH-TOKEN", Application.Current.Properties.ContainsKey("Api_token") ? Application.Current.Properties["Api_token"].ToString() : "null");
-                                request.AddJsonBody(new { project = 1, activity = 1 });
-
                                 client.ExecuteAsync<List<Timesheet>>(request, response2 =>
                                 {
                                     if (response2.StatusCode == HttpStatusCode.OK)
                                     {
                                         Device.BeginInvokeOnMainThread(() =>
                                         {
-                                            fiche = true;
+                                            client = new RestClient("https://fichaje.qindel.com");
+
+                                            request = new RestRequest("api/timesheets/" + response2.Data[0].id + "/restart", Method.PATCH);
+                                            request.AddHeader("X-AUTH-USER", Application.Current.Properties.ContainsKey("UserName") ? Application.Current.Properties["UserName"].ToString() : "null");
+                                            request.AddHeader("X-AUTH-TOKEN", Application.Current.Properties.ContainsKey("Api_token") ? Application.Current.Properties["Api_token"].ToString() : "null");
+                                            client.ExecuteAsync<List<Timesheet>>(request, response3 =>
+                                            {
+                                                if (response3.StatusCode == HttpStatusCode.OK)
+                                                {
+                                                    Device.BeginInvokeOnMainThread(() =>
+                                                    {
+                                                        fiche = true;
+                                                        llegue.IsEnabled = false;
+                                                        mevoy.IsEnabled = true;
+                                                        actIndicator.IsVisible = false;
+                                                        counter.IsVisible = true;
+                                                        hour = 0;
+                                                        minute = 0;
+                                                        counter.Text = "00:00";
+                                                        timerOn = true;
+                                                        if ((bool)Application.Current.Properties["NotificationsEnabled"])
+                                                        {
+                                                            TimeSpan time = Application.Current.Properties.ContainsKey("NumHoras") ? (TimeSpan)Application.Current.Properties["NumHoras"] : new TimeSpan(8, 0, 0);
+                                                            Console.WriteLine(time);
+                                                            CrossLocalNotifications.Current.Cancel(0);
+                                                            CrossLocalNotifications.Current.Show("Fichaje Qindel", "Amigo, lleva trabajando mas de " + time.Hours + ":" + (time.Minutes.CompareTo(10) != -1 ? time.Minutes.ToString() : "0" + time.Minutes.ToString()) + " horas", 0, DateTime.Now.AddHours(time.Hours).AddMinutes(time.Minutes));
+                                                        }
+                                                        Device.StartTimer(TimeSpan.FromMinutes(1), OnTimerTick);
+                                                    });
+                                                }
+                                                else if (response.StatusCode == HttpStatusCode.Forbidden)
+                                                {
+                                                    Device.BeginInvokeOnMainThread(() =>
+                                                    {
+                                                        CrossLocalNotifications.Current.Cancel(0);
+                                                        llegue.IsEnabled = false;
+                                                        mevoy.IsEnabled = false;
+                                                        fiche = false;
+                                                        actIndicator.IsVisible = false;
+                                                        counter.IsVisible = true;
+                                                        counter.Text = "Error con las credenciales";
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    Device.BeginInvokeOnMainThread(() =>
+                                                    {
+                                                        CrossLocalNotifications.Current.Cancel(0);
+                                                        llegue.IsEnabled = false;
+                                                        mevoy.IsEnabled = false;
+                                                        fiche = false;
+                                                        actIndicator.IsVisible = false;
+                                                        counter.IsVisible = true;
+                                                        counter.Text = "Problema con la peticion";
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    }
+                                    else if (response.StatusCode == HttpStatusCode.Forbidden)
+                                    {
+                                        Device.BeginInvokeOnMainThread(() =>
+                                        {
+                                            CrossLocalNotifications.Current.Cancel(0);
                                             llegue.IsEnabled = false;
-                                            mevoy.IsEnabled = true;
+                                            mevoy.IsEnabled = false;
+                                            fiche = false;
                                             actIndicator.IsVisible = false;
                                             counter.IsVisible = true;
-                                            hour = 0;
-                                            minute = 0;
-                                            counter.Text = "00:00";
-                                            timerOn = true;
-                                            if ((bool)Application.Current.Properties["NotificationsEnabled"])
-                                            {
-                                                TimeSpan time = Application.Current.Properties.ContainsKey("NumHoras") ? (TimeSpan)Application.Current.Properties["NumHoras"] : new TimeSpan(8, 0, 0);
-                                                Console.WriteLine(time);
-                                                CrossLocalNotifications.Current.Cancel(0);
-                                                CrossLocalNotifications.Current.Show("Fichaje Qindel", "Amigo, lleva trabajando mas de " + time.Hours + ":" + (time.Minutes.CompareTo(10) != -1 ? time.Minutes.ToString() : "0" + time.Minutes.ToString()) + " horas", 0, DateTime.Now.AddHours(time.Hours).AddMinutes(time.Minutes));
-                                            }
-                                            Device.StartTimer(TimeSpan.FromMinutes(1), OnTimerTick);
+                                            counter.Text = "Error con las credenciales";
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Device.BeginInvokeOnMainThread(() =>
+                                        {
+                                            CrossLocalNotifications.Current.Cancel(0);
+                                            llegue.IsEnabled = false;
+                                            mevoy.IsEnabled = false;
+                                            fiche = false;
+                                            actIndicator.IsVisible = false;
+                                            counter.IsVisible = true;
+                                            counter.Text = "Problema con la peticion";
                                         });
                                     }
                                 });
@@ -231,7 +321,7 @@ namespace FichajeQindel
                         fiche = false;
                         actIndicator.IsVisible = false;
                         counter.IsVisible = true;
-                        counter.Text = "No tienes acceso a la red";
+                        counter.Text = "Problema con la peticion";
                     });
                 }
             });
